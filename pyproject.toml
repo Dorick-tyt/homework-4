@@ -1,0 +1,30 @@
+[project]
+name = "pythonproject2"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.14"
+dependencies = [
+    "black>=26.3.1",
+    "mypy>=1.20.0",
+    "pandas>=3.0.2",
+    "requests>=2.33.1",
+    "ruff>=0.15.9",
+]
+
+[dependency-groups]
+dev = [
+    "pytest-cov>=7.1.0",
+]
+test = [
+    "pytest>=9.0.2",
+    "pytest-cov>=7.1.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.mypy]
+explicit_package_bases = true
+namespace_packages = true
+mypy_path = "src"
