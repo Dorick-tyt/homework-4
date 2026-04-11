@@ -55,17 +55,23 @@ class Product:
             print(f"Цена успешно изменена на {value}")
 
     @classmethod
-    def new_product(cls, name: str, description: str, price: float, quantity: int):
+    def new_product(cls, product_data: dict):
         """
-        Класс-метод для создания нового продукта
+        Класс-метод для создания нового продукта из словаря
 
         Args:
-            name: Название продукта
-            description: Описание продукта
-            price: Цена продукта
-            quantity: Количество в наличии
+            product_data: Словарь с ключами:
+                - 'name': название товара
+                - 'description': описание товара
+                - 'price': цена товара
+                - 'quantity': количество товара
 
         Returns:
             Объект класса Product
         """
-        return cls(name, description, price, quantity)
+        return cls(
+            product_data["name"],
+            product_data["description"],
+            product_data["price"],
+            product_data["quantity"],
+        )
