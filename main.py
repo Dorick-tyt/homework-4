@@ -14,40 +14,35 @@ if __name__ == "__main__":
         [product1, product2, product3]
     )
 
-    # Выводим список товаров в категории (через геттер)
     print(category1.products)
 
     # Добавляем новый товар
     product4 = Product("55\" QLED 4K", "Фоновая подсветка", 123000.0, 7)
     category1.add_product(product4)
 
-    # Снова выводим список товаров
     print(category1.products)
-
-    # Выводим общее количество товаров во всех категориях
     print(category1.product_count)
 
-    # Исправленный вызов new_product (передаём параметры отдельно, НЕ словарь)
-    new_product = Product.new_product(
-        "Samsung Galaxy S23 Ultra",
-        "256GB, Серый цвет, 200MP камера",
-        180000.0,
-        5
-    )
+    # Создаём продукт через класс-метод с использованием словаря
+    product_data = {
+        "name": "Samsung Galaxy S23 Ultra",
+        "description": "256GB, Серый цвет, 200MP камера",
+        "price": 180000.0,
+        "quantity": 5
+    }
+    new_product = Product.new_product(product_data)
 
     print(new_product.name)
     print(new_product.description)
     print(new_product.price)
     print(new_product.quantity)
 
-    # Тестируем сеттер с корректной ценой
+    # Тестируем изменение цены
     new_product.price = 800
     print(new_product.price)
 
-    # Тестируем сеттер с отрицательной ценой
     new_product.price = -100
     print(new_product.price)
 
-    # Тестируем сеттер с нулевой ценой
     new_product.price = 0
     print(new_product.price)
