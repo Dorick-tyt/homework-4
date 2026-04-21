@@ -1,5 +1,5 @@
 class Product:
-    """Класс для представления продукта"""
+    """Базовый класс для представления продукта"""
 
     def __init__(self, name: str, description: str, price: float, quantity: int):
         """
@@ -43,29 +43,12 @@ class Product:
 
     @property
     def total_cost(self) -> float:
-        """
-        Общая стоимость товара на складе
-
-        Returns:
-            price * quantity
-        """
+        """Общая стоимость товара на складе"""
         return self.__price * self.quantity
 
     @classmethod
     def new_product(cls, product_data: dict):
-        """
-        Класс-метод для создания нового продукта из словаря
-
-        Args:
-            product_data: Словарь с ключами:
-                - 'name': название товара
-                - 'description': описание товара
-                - 'price': цена товара
-                - 'quantity': количество товара
-
-        Returns:
-            Объект класса Product
-        """
+        """Класс-метод для создания нового продукта из словаря"""
         return cls(
             product_data["name"],
             product_data["description"],
@@ -74,12 +57,7 @@ class Product:
         )
 
     def __str__(self) -> str:
-        """
-        Строковое отображение продукта
-
-        Returns:
-            Строка в формате: "Название продукта, X руб. Остаток: X шт."
-        """
+        """Строковое отображение продукта"""
         price_int = int(self.__price) if self.__price.is_integer() else self.__price
         return f"{self.name}, {price_int} руб. Остаток: {self.quantity} шт."
 
@@ -87,35 +65,33 @@ class Product:
         """
         Сложение продуктов (общая стоимость товаров на складе)
 
+        Важно: можно складывать только товары одного класса!
+
         Args:
-            other: Другой объект Product или число
+            other: Другой объект Product или его наследник
 
         Returns:
             Общая стоимость: (price1 * quantity1) + (price2 * quantity2)
 
         Raises:
-            TypeError: Если other не является Product или числом
+            TypeError: Если other не является Product или типы товаров разные
         """
-        if isinstance(other, Product):
-            # Суммируем общую стоимость двух товаров
-            return self.total_cost + other.total_cost
-        elif isinstance(other, (int, float)):
-            # Если складываем с числом
-            return self.total_cost + other
-        else:
+        # Проверяем, что other является экземпляром Product
+        if not isinstance(other, Product):
             raise TypeError(f"Нельзя сложить Product с типом {type(other).__name__}")
 
+        # Проверяем, что товары одного класса
+        if not isinstance(other, type(self)):
+            raise TypeError(
+                f"Нельзя складывать товары разных классов: "
+                f"{type(self).__name__} и {type(other).__name__}"
+            )
+
+        # Складываем общую стоимость
+        return self.total_cost + other.total_cost
+
     def __radd__(self, other):
-        """
-        Правое сложение (для поддержки sum() и случаев, когда Product справа)
-
-        Args:
-            other: Другой объект (число или Product)
-
-        Returns:
-            Общая стоимость
-        """
+        """Правое сложение (для поддержки sum())"""
         if other == 0:
-            # Для поддержки sum() с пустым начальным значением
             return self.total_cost
         return self.__add__(other)
