@@ -80,8 +80,8 @@ class Product:
         if not isinstance(other, Product):
             raise TypeError(f"Нельзя сложить Product с типом {type(other).__name__}")
 
-        # Проверяем, что товары одного класса
-        if not isinstance(other, type(self)):
+        # Проверяем, что товары одного класса с использованием type()
+        if type(self) != type(other):
             raise TypeError(
                 f"Нельзя складывать товары разных классов: "
                 f"{type(self).__name__} и {type(other).__name__}"
