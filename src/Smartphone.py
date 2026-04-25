@@ -1,3 +1,4 @@
+# src/Smartphone.py
 from src.Product import Product
 
 
@@ -15,7 +16,11 @@ class Smartphone(Product):
         memory: int,
         color: str,
     ):
+        # Передаём все параметры в родительский класс
+        # LogMixin перехватит их и выведет
         super().__init__(name, description, price, quantity)
+
+        # Устанавливаем дополнительные атрибуты
         self.efficiency = efficiency
         self.model = model
         self.memory = memory

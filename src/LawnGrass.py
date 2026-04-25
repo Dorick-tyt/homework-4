@@ -1,3 +1,4 @@
+# src/LawnGrass.py
 from src.Product import Product
 
 
@@ -14,7 +15,9 @@ class LawnGrass(Product):
         germination_period: int,
         color: str,
     ):
+        # Передаём все параметры в родительский класс
         super().__init__(name, description, price, quantity)
+
         self.country = country
         self.germination_period = germination_period
         self.color = color

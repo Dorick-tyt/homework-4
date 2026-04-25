@@ -1,4 +1,10 @@
-class Product:
+from typing import Any, Dict
+
+from src.BaseProduct import BaseProduct
+from src.LogMixin import LogMixin
+
+
+class Product(LogMixin, BaseProduct):
     """Базовый класс для представления продукта"""
 
     def __init__(self, name: str, description: str, price: float, quantity: int):
@@ -11,6 +17,11 @@ class Product:
             price: Цена продукта (может быть с копейками)
             quantity: Количество в наличии (в штуках)
         """
+        # Вызываем конструкторы родительских классов
+        # LogMixin.__init__ -> BaseProduct.__init__ -> object.__init__
+        super().__init__(name, description, price, quantity)
+
+        # Устанавливаем атрибуты
         self.name = name
         self.description = description
         self.__price = price
@@ -47,7 +58,7 @@ class Product:
         return self.__price * self.quantity
 
     @classmethod
-    def new_product(cls, product_data: dict):
+    def new_product(cls, product_data: Dict[str, Any]):
         """Класс-метод для создания нового продукта из словаря"""
         return cls(
             product_data["name"],
@@ -62,32 +73,16 @@ class Product:
         return f"{self.name}, {price_int} руб. Остаток: {self.quantity} шт."
 
     def __add__(self, other):
-        """
-        Сложение продуктов (общая стоимость товаров на складе)
-
-        Важно: можно складывать только товары одного класса!
-
-        Args:
-            other: Другой объект Product или его наследник
-
-        Returns:
-            Общая стоимость: (price1 * quantity1) + (price2 * quantity2)
-
-        Raises:
-            TypeError: Если other не является Product или типы товаров разные
-        """
-        # Проверяем, что other является экземпляром Product
+        """Сложение продуктов (общая стоимость товаров на складе)"""
         if not isinstance(other, Product):
             raise TypeError(f"Нельзя сложить Product с типом {type(other).__name__}")
 
-        # Проверяем, что товары одного класса с использованием type()
-        if type(self) != type(other):
+        if type(self) is not type(other):
             raise TypeError(
                 f"Нельзя складывать товары разных классов: "
                 f"{type(self).__name__} и {type(other).__name__}"
             )
 
-        # Складываем общую стоимость
         return self.total_cost + other.total_cost
 
     def __radd__(self, other):
