@@ -1,4 +1,3 @@
-# src/LawnGrass.py
 from src.Product import Product
 
 
@@ -6,16 +5,16 @@ class LawnGrass(Product):
     """Класс для представления газонной травы"""
 
     def __init__(
-        self,
-        name: str,
-        description: str,
-        price: float,
-        quantity: int,
-        country: str,
-        germination_period: int,
-        color: str,
+            self,
+            name: str,
+            description: str,
+            price: float,
+            quantity: int,
+            country: str,
+            germination_period: int,
+            color: str
     ):
-        # Передаём все параметры в родительский класс
+        # Проверка количества будет выполнена в Product.__init__
         super().__init__(name, description, price, quantity)
 
         self.country = country
