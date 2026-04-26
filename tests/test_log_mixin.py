@@ -61,15 +61,18 @@ class TestLogMixin(unittest.TestCase):
     def test_log_mixin_handles_empty_parameters(self):
         """Тест: миксин обрабатывает создание без параметров"""
 
-        # Создаём класс без параметров для теста
-        class EmptyClass(Product):
+        # Создаём класс, который не требует параметров
+        class SimpleClass(Product):
             def __init__(self):
-                super().__init__("Default", "Desc", 0, 0)
+                # Передаём валидные значения по умолчанию (quantity > 0)
+                super().__init__("Default", "Desc", 100, 1)  # quantity=1
 
-        empty = EmptyClass()
+        simple = SimpleClass()
         output = self.captured_output.getvalue()
 
-        self.assertIn("Создан объект: EmptyClass", output)
+        self.assertIn("Создан объект: SimpleClass", output)
+        self.assertIn("'Default'", output)
+        self.assertIn("1", output)
 
 
 class TestLogMixinOrder(unittest.TestCase):

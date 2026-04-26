@@ -1,5 +1,4 @@
-from typing import Any, Dict
-
+from typing import Dict, Any
 from src.BaseProduct import BaseProduct
 from src.LogMixin import LogMixin
 
@@ -16,9 +15,15 @@ class Product(LogMixin, BaseProduct):
             description: Описание продукта
             price: Цена продукта (может быть с копейками)
             quantity: Количество в наличии (в штуках)
+
+        Raises:
+            ValueError: Если количество товара равно 0 или отрицательное
         """
+        # Проверка количества товара
+        if quantity <= 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+
         # Вызываем конструкторы родительских классов
-        # LogMixin.__init__ -> BaseProduct.__init__ -> object.__init__
         super().__init__(name, description, price, quantity)
 
         # Устанавливаем атрибуты
@@ -43,7 +48,7 @@ class Product(LogMixin, BaseProduct):
             print(f"Вы пытаетесь понизить цену с {self.__price} до {value}")
             user_input = input("Вы уверены? (y/n): ").lower()
 
-            if user_input == "y":
+            if user_input == 'y':
                 self.__price = value
                 print("Цена успешно изменена")
             else:
@@ -61,10 +66,10 @@ class Product(LogMixin, BaseProduct):
     def new_product(cls, product_data: Dict[str, Any]):
         """Класс-метод для создания нового продукта из словаря"""
         return cls(
-            product_data["name"],
-            product_data["description"],
-            product_data["price"],
-            product_data["quantity"],
+            product_data['name'],
+            product_data['description'],
+            product_data['price'],
+            product_data['quantity']
         )
 
     def __str__(self) -> str:

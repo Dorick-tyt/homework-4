@@ -1,6 +1,5 @@
 from typing import List
-
-from src.Product import Product
+from src.BaseProduct import BaseProduct
 
 
 class Category:
@@ -9,14 +8,14 @@ class Category:
     category_count = 0
     product_count = 0
 
-    def __init__(self, name: str, description: str, products: List[Product]):
+    def __init__(self, name: str, description: str, products: List[BaseProduct]):
         """
         Инициализация категории
 
         Args:
             name: Название категории
             description: Описание категории
-            products: Список товаров в категории (объекты Product и его наследников)
+            products: Список товаров в категории (объекты BaseProduct и его наследников)
         """
         self.name = name
         self.description = description
@@ -24,30 +23,70 @@ class Category:
 
         Category.category_count += 1
 
-        # Добавляем продукты через метод add_product для валидации
         for product in products:
             self.add_product(product)
 
-    def add_product(self, product: Product):
+    def add_product(self, product: BaseProduct):
         """
-        Добавляет товар в категорию с проверкой типа
+        Добавляет товар в категорию с проверкой типа и количества
 
         Args:
-            product: Объект класса Product или его наследника
+            product: Объект класса BaseProduct или его наследника
 
         Raises:
-            TypeError: Если product не является экземпляром Product или его наследника
+            TypeError: Если product не является экземпляром BaseProduct
+            ValueError: Если количество товара равно 0 или отрицательное
         """
-        # Проверяем, является ли product экземпляром Product или его наследником
-        if not isinstance(product, Product):
+        if not isinstance(product, BaseProduct):
             raise TypeError(
-                f"Можно добавлять только объекты класса Product или его наследников. "
+                f"Можно добавлять только объекты класса BaseProduct или его наследников. "
                 f"Получен тип: {type(product).__name__}"
             )
 
-        # Добавляем продукт
+        # Проверка количества товара
+        if product.quantity <= 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+
         self.__products.append(product)
         Category.product_count += 1
+
+    def average_price(self) -> float:
+        """
+        Подсчитывает среднюю цену всех товаров в категории
+
+        Returns:
+            Средняя цена товара (сумма цен всех товаров / количество товаров)
+            Если в категории нет товаров, возвращает 0
+
+        Note:
+            Для расчёта используется цена за единицу товара (price),
+            а не общая стоимость (total_cost)
+        """
+        try:
+            # Считаем сумму цен всех товаров
+            total_price = sum(product.price for product in self.__products)
+            # Считаем количество товаров
+            products_count = len(self.__products)
+            # Вычисляем среднюю цену
+            return total_price / products_count
+        except ZeroDivisionError:
+            # Если в категории нет товаров, возвращаем 0
+            return 0
+
+    def average_cost(self) -> float:
+        """
+        Альтернативный метод: подсчитывает среднюю общую стоимость товаров
+
+        Returns:
+            Средняя общая стоимость (total_cost / количество товаров)
+            Если в категории нет товаров, возвращает 0
+        """
+        try:
+            total_cost = sum(product.total_cost for product in self.__products)
+            products_count = len(self.__products)
+            return total_cost / products_count
+        except ZeroDivisionError:
+            return 0
 
     @property
     def products(self) -> str:
@@ -57,7 +96,7 @@ class Category:
         return "\n".join(str(product) for product in self.__products)
 
     @property
-    def products_list(self) -> List[Product]:
+    def products_list(self) -> List[BaseProduct]:
         """Геттер для получения списка товаров (только для чтения)"""
         return self.__products.copy()
 
